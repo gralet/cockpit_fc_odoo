@@ -53,7 +53,7 @@ class fc_export_xls(models.TransientModel):
         self._cr.execute(query)
         all_data = self._cr.fetchall()
 
- 
+
 
         # Excel Styles :
         # Header Style

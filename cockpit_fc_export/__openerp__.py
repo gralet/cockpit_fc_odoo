@@ -29,7 +29,7 @@
 
 {
     'name': 'Financial Cockpit Export data',
-    'version': '8.0.1.0.0',
+    'version': '8.0.2.0.0',
     'author': 'Geoffroy Ralet',
     'website': 'http://www.telarcom.be',
     'summary': "Financial Cockpit Export Data",

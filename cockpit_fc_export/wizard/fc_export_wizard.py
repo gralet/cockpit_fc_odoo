@@ -15,9 +15,10 @@ class fc_export_xls(models.TransientModel):
     @api.multi
     def fc_create_xls(self):
         """
-        Create a excel export
+        Create an excel export
         """
 
+        self.ensure_one()
         if not self.id:
             return False
 
@@ -33,9 +34,10 @@ class fc_export_xls(models.TransientModel):
             raise exceptions.Warning('You can export only one year at the time')
 
         data_year = date_start.year
+        company_id_id = self.company_id.id
 
         # For security
-        if not 0 < self.company_id.id < 1000:
+        if not 0 < company_id_id < 1000:
             raise exceptions.Warning('Erreur format company_id')
 
 
@@ -47,9 +49,11 @@ class fc_export_xls(models.TransientModel):
                           group by
                           b.code,b.name, c.name, extract(year from a.date),extract(month from a.date)
                           order by extract(month from a.date), b.code
-                    """ % (date_start, date_stop,self.company_id.id)
-        self._cr.execute(query, (tuple(self.ids),))
+                    """ % (date_start, date_stop,company_id_id)
+        self._cr.execute(query)
+        all_data = self._cr.fetchall()
 
+ 
 
         # Excel Styles :
         # Header Style
@@ -74,9 +78,9 @@ class fc_export_xls(models.TransientModel):
         )
 
 
+        company_name = self.company_id.name
         wb = xlwt.Workbook()
-        ws = wb.add_sheet('taktik_FC')
-
+        ws = wb.add_sheet(company_name.lower() + '_FC')
 
 
         # Write titles
@@ -105,12 +109,12 @@ class fc_export_xls(models.TransientModel):
 
 
         # The 2 first columns only need to be filled on first line
-        ws.write(1, 0, 'TAKTIK', style_normal)
+        ws.write(1, 0, company_name.upper(), style_normal)
         ws.write(1, 1, data_year, style_int)
 
         # Write data
         y = 0
-        for account_num,account_name, journal_name,dyear,dmonth,debit,credit,balance in self._cr.fetchall():
+        for account_num,account_name, journal_name,dyear,dmonth,debit,credit,balance in all_data:
             y += 1
 
             period_end_date  = date(dyear, dmonth, 1) + relativedelta(months=1) - relativedelta(days=1)

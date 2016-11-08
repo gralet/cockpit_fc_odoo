@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="fc_export_wizard_form" model="ir.ui.view">
+            <field name="name">fc_export_wizard_form</field>
+            <field name="model">fc.export.xls</field>
+            <field name="arch" type="xml">
+                <form string="Financial Cockpit XLS Export">
+                    <newline/>
+                    <group>
+                        <p class="oe_grey">
+                            Financial Cockpit XLS Export
+                        </p>
+                    </group>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="data_start_date"/>
+                        <field name="data_end_date"/>
+                    </group>
+                    <footer>
+                        <button class="oe_highlight"
+                                name="fc_create_xls"
+                                string="Download"
+                                type="object"/>
+                        or
+                        <button
+                                class="oe_highlight"
+                                string="Cancel"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="fc_export_wizard_action" model="ir.actions.act_window">
+            <field name="name">Financial Cockpit XLS Export</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fc.export.xls</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="fc_export_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="fc_export_wizard_action"
+                  id="fc_export_wizard_menu"
+                  groups="account.group_account_user"
+                  parent="account.menu_finance_reporting" sequence="20"/>
+    </data>
+</openerp>
